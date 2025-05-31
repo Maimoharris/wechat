@@ -32,7 +32,6 @@ exports.getAllChatrooms = async (req, res) => {
 exports.sendMessage = async (req, res) => {
   try {
     const { chatroomId, message } = req.body;
-    // Assuming req.user is set by your auth middleware
     const sender = req.user._id;
 
     const newMessage = await Chat.create({
