@@ -1,23 +1,16 @@
-import mongoose from 'mongoose'
-import config from './index.js'
+const mongoose = require('mongoose');
 
-const CONNECTION_URL = `mongodb://${config.db.url}/${config.db.name}`
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`MongoDB connected: ${conn.connection.host}`);
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    process.exit(1);
+  }
+};
 
-mongoose.connect(CONNECTION_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-
-mongoose.connection.on('connected', () => {
-  console.log('Mongo has connected succesfully')
-})
-mongoose.connection.on('reconnected', () => {
-  console.log('Mongo has reconnected')
-})
-mongoose.connection.on('error', error => {
-  console.log('Mongo connection has an error', error)
-  mongoose.disconnect()
-})
-mongoose.connection.on('disconnected', () => {
-  console.log('Mongo connection is disconnected')
-})
+module.exports = connectDB;

@@ -1,10 +1,15 @@
 const http = require('http');
 const { Server } = require('socket.io');
 const jwt = require('jsonwebtoken');
+const connectDB = require('./config/db'); 
+require('dotenv').config();
+
+connectDB(); 
+
 const app = require('./app');
 const Chat = require('./models/Chat');
 const User = require('./models/User');
-const connectDB = require('./config/db');
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -12,7 +17,7 @@ const io = new Server(server, {
   },
 });
 
-const secret = 'your_jwt_secret'; // Replace with your secret key
+const secret = 'your_jwt_secret';
 
 io.use(async (socket, next) => {
   const token = socket.handshake.auth.token;
@@ -44,15 +49,9 @@ io.on('connection', (socket) => {
   });
 });
 
-connectDB();
 app.set('view engine', 'ejs');
+
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-
-
-
-
-
