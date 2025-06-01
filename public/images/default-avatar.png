@@ -1,0 +1,6 @@
+/* This is a placeholder for the default avatar image.
+   In a real project, you would need to provide an actual image file.
+   Since we can't include binary files in this example, this file serves as a reminder.
+   
+   Users will need to place a default-avatar.png file in this directory,
+   or update the User model to use an external image URL instead. */

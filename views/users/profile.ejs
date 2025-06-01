@@ -1,0 +1,60 @@
+
+
+<div class="container">
+  <div class="profile-container">
+    <div class="profile-header">
+      <h2>Your Profile</h2>
+      <p>Manage your personal information</p>
+    </div>
+    
+    <div class="profile-content">
+      <div class="profile-avatar">
+        <img src="<%= user.profilePicture %>" alt="<%= user.username %>" class="avatar-large">
+        <h3><%= user.username %></h3>
+        <p><%= user.email %></p>
+      </div>
+      
+      <div class="profile-form-container">
+        <h3>Edit Profile Information</h3>
+        
+        <% if (locals.error) { %>
+          <div class="alert alert-error">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <%= error %>
+          </div>
+        <% } %>
+        
+        <form action="/users/profile" method="POST" class="profile-form">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="<%= user.username %>" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="<%= user.email %>" required>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <div class="account-section">
+      <h3>Account Settings</h3>
+      <div class="account-actions">
+        <a href="#" class="btn-secondary">Change Password</a>
+        <button class="btn-danger" id="delete-account">Delete Account</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Delete account
+  document.getElementById('delete-account').addEventListener('click', () => {
+    alert('This feature is currently under development.');
+  });
+</script>

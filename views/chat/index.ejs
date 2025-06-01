@@ -1,0 +1,121 @@
+
+<div class="chat-container">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>Conversations</h2>
+      <a href="/users" class="new-chat-btn">
+        <i class="fa-solid fa-plus"></i>
+      </a>
+    </div>
+    
+    <div class="search-bar">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" placeholder="Search conversations..." id="conversation-search">
+    </div>
+    
+    <div class="conversation-list">
+      <% if (conversations.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fa-solid fa-comments"></i>
+          </div>
+          <p>No conversations yet</p>
+          <a href="/users" class="btn-secondary">Start a new chat</a>
+        </div>
+      <% } else { %>
+        <% conversations.forEach(conversation => { %>
+          <% const otherUser = conversation.participants[0]; %>
+          <a href="/chats/<%= otherUser._id %>" class="conversation-item">
+            <div class="avatar-wrapper">
+              <img src="<%= otherUser.profilePicture %>" alt="<%= otherUser.username %>" class="avatar">
+              <span class="user-status <%= new Date() - new Date(otherUser.lastSeen) < 300000 ? 'online' : 'offline' %>" data-user-id="<%= otherUser._id %>"></span>
+            </div>
+            <div class="conversation-info">
+              <div class="conversation-header">
+                <h3><%= otherUser.username %></h3>
+                <% if (conversation.lastMessage) { %>
+                  <span class="timestamp"><%= new Date(conversation.lastMessage.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %></span>
+                <% } %>
+              </div>
+              <p class="last-message">
+                <% if (conversation.lastMessage) { %>
+                  <%= conversation.lastMessage.content.length > 30 ? conversation.lastMessage.content.substring(0, 30) + '...' : conversation.lastMessage.content %>
+                <% } else { %>
+                  No messages yet
+                <% } %>
+              </p>
+            </div>
+            <div class="conversation-actions">
+              <button class="delete-conversation-btn" data-user-id="<%= otherUser._id %>">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </a>
+        <% }); %>
+      <% } %>
+    </div>
+  </div>
+  
+  <div class="main-content-placeholder">
+    <div class="placeholder-content">
+      <div class="placeholder-icon">
+        <i class="fa-solid fa-comments"></i>
+      </div>
+      <h2>Welcome to ChatterBox</h2>
+      <p>Select a conversation or start a new chat to begin messaging</p>
+      <a href="/users" class="btn-primary">
+        <i class="fa-solid fa-user-plus"></i> Find Users
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Delete conversation
+  document.querySelectorAll('.delete-conversation-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (confirm('Are you sure you want to delete this conversation? This action cannot be undone.')) {
+        const userId = btn.dataset.userId;
+        
+        try {
+          const response = await fetch(`/chats/${userId}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            // Remove conversation from DOM
+            btn.closest('.conversation-item').remove();
+          }
+        } catch (error) {
+          console.error('Error deleting conversation:', error);
+        }
+      }
+    });
+  });
+  
+  // Search functionality
+  const searchInput = document.getElementById('conversation-search');
+  searchInput.addEventListener('input', () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    const conversationItems = document.querySelectorAll('.conversation-item');
+    
+    conversationItems.forEach(item => {
+      const username = item.querySelector('h3').textContent.toLowerCase();
+      const lastMessage = item.querySelector('.last-message').textContent.toLowerCase();
+      
+      if (username.includes(searchTerm) || lastMessage.includes(searchTerm)) {
+        item.style.display = 'flex';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  });
+</script>

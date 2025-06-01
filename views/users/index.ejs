@@ -1,0 +1,59 @@
+
+
+<div class="container">
+  <div class="users-container">
+    <div class="users-header">
+      <h2>All Users</h2>
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search users..." id="user-search">
+      </div>
+    </div>
+    
+    <div class="users-list">
+      <% if (users.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <p>No other users found</p>
+        </div>
+      <% } else { %>
+        <% users.forEach(user => { %>
+          <div class="user-card">
+            <div class="user-info">
+              <div class="avatar-wrapper">
+                <img src="<%= user.profilePicture %>" alt="<%= user.username %>" class="avatar">
+                <span class="user-status <%= new Date() - new Date(user.lastSeen) < 300000 ? 'online' : 'offline' %>" data-user-id="<%= user._id %>"></span>
+              </div>
+              <div class="user-details">
+                <h3><%= user.username %></h3>
+                <p><%= new Date() - new Date(user.lastSeen) < 300000 ? 'Online' : 'Last seen ' + new Date(user.lastSeen).toLocaleString() %></p>
+              </div>
+            </div>
+            <a href="/chats/<%= user._id %>" class="btn-primary">Message</a>
+          </div>
+        <% }); %>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Search functionality
+  const searchInput = document.getElementById('user-search');
+  searchInput.addEventListener('input', () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    const userCards = document.querySelectorAll('.user-card');
+    
+    userCards.forEach(card => {
+      const username = card.querySelector('h3').textContent.toLowerCase();
+      
+      if (username.includes(searchTerm)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+</script>
