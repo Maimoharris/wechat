@@ -1214,35 +1214,47 @@ input, textarea, select {
 @media (max-width: 767px) {
   .nav-links {
     display: none;
+    flex-direction: column;
+    background: #fdfbfb;
+    padding: 1em;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
   }
-  
+
+  .nav-links.show {
+    display: flex !important;
+  }
+
   .mobile-menu-btn {
     display: block;
   }
-  
+
   .features-grid {
     grid-template-columns: 1fr;
     max-width: 400px;
     margin: 0 auto;
   }
-  
+
   .footer-content {
     flex-direction: column;
     gap: 2rem;
   }
-  
+
   .footer-links {
     gap: 2rem;
   }
-  
+
   .sidebar {
     display: none;
   }
-  
+
   .back-btn {
     display: block;
   }
-  
+
   .chat-container {
     flex-direction: column;
   }

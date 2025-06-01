@@ -3,6 +3,7 @@ const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 
 if (mobileMenuBtn) {
   mobileMenuBtn.addEventListener('click', function() {
+    console.log('Menu button clicked');
     const navLinks = document.querySelector('.nav-links');
     navLinks.classList.toggle('show');
   });
